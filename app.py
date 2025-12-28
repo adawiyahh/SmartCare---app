@@ -1,71 +1,132 @@
 import streamlit as st
 import time
 
-st.set_page_config(page_title="SmartCare", layout="wide")
+# -------------------------
+# PAGE CONFIG (MOBILE FIRST)
+# -------------------------
+st.set_page_config(
+    page_title="SmartCare",
+    layout="centered"
+)
 
-# Splash Screen
+# -------------------------
+# PHONE FRAME STYLING
+# -------------------------
+st.markdown("""
+<style>
+.phone-frame {
+    max-width: 390px;
+    margin: auto;
+    border: 2px solid #e5e7eb;
+    border-radius: 28px;
+    padding: 16px;
+    background-color: white;
+}
+.center {
+    text-align: center;
+}
+.big-button button {
+    width: 100%;
+    height: 3rem;
+    font-size: 1rem;
+}
+</style>
+
+<div class="phone-frame">
+""", unsafe_allow_html=True)
+
+# -------------------------
+# SPLASH SCREEN
+# -------------------------
 if "loaded" not in st.session_state:
     st.session_state.loaded = False
 
 if not st.session_state.loaded:
-    st.image("assets/smartcare_logo.jpg", width=200)
-    st.markdown("### Intelligent. Empowered. Connected Elder Care")
+    st.markdown("<div class='center'>", unsafe_allow_html=True)
+    st.image("assets/smartcare_logo.jpg", width=160)
+    st.markdown("### Intelligent • Empowered • Connected")
+    st.markdown("##### Elder Care Made Simple")
+    st.markdown("</div>", unsafe_allow_html=True)
     time.sleep(2)
     st.session_state.loaded = True
     st.rerun()
 
-# Caregiver Dashboard
-st.title("Caregiver Dashboard")
+# -------------------------
+# CAREGIVER DASHBOARD
+# -------------------------
+st.markdown("## 👩‍⚕️ Caregiver Dashboard")
 
-col1, col2, col3 = st.columns(3)
+st.markdown("### 👴 Elder Overview")
 
-col1.metric("Heart Rate", "72 bpm")
-col2.metric("Elder Status", "Safe 🟢")
-col3.metric("Last Medication", "Taken ✅")
+st.metric("❤️ Heart Rate", "72 bpm")
+st.metric("🟢 Status", "Safe")
+st.metric("💊 Medication", "Taken")
 
 st.divider()
 
-# Meds taken
+# -------------------------
+# MEDICATION TRACKER
+# -------------------------
+st.markdown("### 💊 Medication Tracker")
 
-st.subheader("Medication Tracker")
+if "med_taken" not in st.session_state:
+    st.session_state.med_taken = False
 
-med_taken = st.checkbox("Morning Medication Taken")
+st.session_state.med_taken = st.checkbox("Morning medication taken")
 
-if med_taken:
+if st.session_state.med_taken:
     st.success("Medication confirmed")
 else:
     st.warning("Medication not taken yet")
 
-# Caregiver chat
-st.subheader("Secure Caregiver Chat")
+st.divider()
+
+# -------------------------
+# CAREGIVER CHAT
+# -------------------------
+st.markdown("### 💬 Secure Caregiver Chat")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-message = st.text_input("Send message to elder")
+message = st.text_input("Type a message")
 
-if st.button("Send"):
-    st.session_state.messages.append(f"Caregiver: {message}")
+if st.button("Send Message"):
+    if message.strip():
+        st.session_state.messages.append(f"👩‍⚕️ Caregiver: {message}")
 
 for msg in st.session_state.messages:
-    st.write(msg)
+    st.info(msg)
 
-# Notification alert
-st.subheader("Alerts")
+st.divider()
+
+# -------------------------
+# ALERTS
+# -------------------------
+st.markdown("### 🚨 Alerts")
 
 if st.button("Trigger Emergency Alert"):
-    st.error("🚨 Fall detected! Caregiver notified.")
+    st.error("🚨 Fall detected! Caregiver notified immediately.")
 
-# Fall Detection
-st.subheader("Fall Detection System")
+st.divider()
 
-fall_detected = st.toggle("Simulate Fall Event")
+# -------------------------
+# FALL DETECTION (SIMULATED)
+# -------------------------
+st.markdown("### 🛑 Fall Detection System")
 
-if fall_detected:
-    st.error("Fall detected from wristband sensor")
-    st.write("Alert sent to caregiver & emergency contact")
+fall_event = st.toggle("Simulate fall from wristband")
+
+if fall_event:
+    st.error("Fall detected via wristband sensor")
+    st.write("Alert sent to caregiver and emergency contact")
 else:
     st.success("No abnormal activity detected")
+
+# -------------------------
+# CLOSE PHONE FRAME
+# -------------------------
+st.markdown("</div>", unsafe_allow_html=True)
 
 
 
